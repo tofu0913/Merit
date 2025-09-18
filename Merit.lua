@@ -73,7 +73,11 @@ windower.register_event('prerender', function(...)
     if windower.ffxi.get_player()['status'] == 1 and (os.clock() - lastwsCheck) > 0.8 then
         tp = windower.ffxi.get_player()['vitals']['tp']
         if tp > 999 then
-			windower.send_command('input /ws '..windower.to_shift_jis("フェルクリーヴ")..' <t>')
+			if isJob('wAR') then
+				windower.send_command('input /ws '..windower.to_shift_jis("フェルクリーヴ")..' <t>')
+			elseif isJob('THF') then
+				windower.send_command('input /ws '..windower.to_shift_jis("イオリアンエッジ")..' <t>')
+			end
         end
         lastwsCheck = os.clock()
     end
@@ -147,11 +151,13 @@ end)
 
 windower.register_event('load', function()
     log('===========loaded===========')
-    windower.send_command("input //gc gax")
-    windower.send_command("input //ata off")
+	if isJob('wAR') then
+		windower.send_command("gc gax")
+		windower.send_command("ata off")
+	elseif isJob('THF') then
+		windower.send_command("gc aby; wait 1; gc su5")
+	end
     windower.send_command("input //ws s")
-    windower.send_command("input //lua l fsd")
-    windower.send_command("input //lua l superwarp")
 end)
 
 windower.register_event('unload', function()
